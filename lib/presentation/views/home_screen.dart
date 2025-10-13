@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Go Green Mates'),
+        title: const Text('Goo Green Mates'),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// ✅ Updated `_getBody()` logic
+  ///  Updated `_getBody()` logic
   Widget _getBody() {
     switch (_selectedIndex) {
       case 0:

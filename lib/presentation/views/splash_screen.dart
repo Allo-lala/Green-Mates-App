@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
               // ignore: prefer_const_constructors
               delay: Duration(milliseconds: 200),
               child: const Text(
-                'Eco-friendly living on blockchain',
+                'Engage Empower Earn',
                 style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
             ),
