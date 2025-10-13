@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 
+// Add these imports 👇
+import 'services_screen.dart';
+import 'campaigns_screen.dart';
+import 'wallet_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -18,8 +23,13 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Go Green Mates'),
         actions: [
           IconButton(
-              icon: const Icon(Icons.notifications_outlined), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.person_outline), onPressed: () {}),
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () {},
+          ),
         ],
       ),
       body: _getBody(),
@@ -40,11 +50,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// ✅ Updated `_getBody()` logic
   Widget _getBody() {
-    if (_selectedIndex == 0) return _buildHome();
-    if (_selectedIndex == 3) return _buildWallet();
-    return const Center(
-        child: Text('Coming Soon', style: TextStyle(fontSize: 24)));
+    switch (_selectedIndex) {
+      case 0:
+        return _buildHome();
+      case 1:
+        return const ServicesScreen();
+      case 2:
+        return const CampaignsScreen();
+      case 3:
+        return const WalletScreen();
+      default:
+        return _buildHome();
+    }
   }
 
   Widget _buildHome() {
@@ -55,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-                colors: [AppColors.primary, AppColors.primaryDark]),
+              colors: [AppColors.primary, AppColors.primaryDark],
+            ),
             borderRadius: BorderRadius.circular(16),
           ),
           child: const Row(
@@ -109,7 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-          color: AppColors.background, borderRadius: BorderRadius.circular(12)),
+        color: AppColors.background,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -124,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // ignore: unused_element
   Widget _buildWallet() {
     return Center(
       child: Column(

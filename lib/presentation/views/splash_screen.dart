@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
             FadeInUp(
               duration: const Duration(milliseconds: 800),
               child: const Text(
-                'Go Green Mates',
+                'Goo Green Mates',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
