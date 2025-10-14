@@ -5,6 +5,8 @@ import '../../core/constants/app_colors.dart';
 import 'services_screen.dart';
 import 'campaigns_screen.dart';
 import 'wallet_screen.dart';
+import 'events_screen.dart';
+import 'eco_points_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -44,6 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icon(Icons.shopping_bag), label: 'Services'),
           BottomNavigationBarItem(
               icon: Icon(Icons.volunteer_activism), label: 'Campaigns'),
+          BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Events'),
+          BottomNavigationBarItem(icon: Icon(Icons.stars), label: 'Points'),
           BottomNavigationBarItem(icon: Icon(Icons.wallet), label: 'Wallet'),
         ],
       ),
@@ -60,6 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         return const CampaignsScreen();
       case 3:
+        return const EventsScreen();
+      case 4:
+        return const EcoPointsScreen();
+      case 5:
         return const WalletScreen();
       default:
         return _buildHome();
