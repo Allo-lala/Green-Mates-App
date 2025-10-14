@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 
@@ -22,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Go Green Mates'),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
@@ -105,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white)),
                               SizedBox(height: 10),
-                              Text('Let\'s make a difference today 🌿',
+                              Text('Let\'s make a difference today',
                                   style: TextStyle(color: Colors.white70)),
                             ],
                           ),
@@ -117,54 +118,89 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const SizedBox(height: 24),
 
-                  // Balance Card
-                  Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Your Balance',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Expanded(child: _balanceItem('CELO', '0.00')),
-                              const SizedBox(width: 20),
-                              Expanded(child: _balanceItem('cUSD', '0.00')),
-                            ],
-                          ),
-                        ],
+                  // Balance Card with Gradient
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [AppColors.primary, AppColors.primaryDark],
                       ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Your Balance',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white)),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(child: _balanceItem('CELO', '0.00')),
+                            const SizedBox(width: 20),
+                            Expanded(child: _balanceItem('cUSD', '0.00')),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
 
                   const SizedBox(height: 24),
 
-                  // Eco Points Section
-                  Card(
-                    // ignore: deprecated_member_use
-                    color: AppColors.accent.withOpacity(0.1),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                  // Eco Points Card with Gradient
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          // ignore: duplicate_ignore
+                          // ignore: deprecated_member_use
+                          AppColors.accent.withOpacity(0.8),
+                          // ignore: duplicate_ignore
+                          // ignore: deprecated_member_use
+                          AppColors.accent.withOpacity(0.4)
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
                     child: ListTile(
                       leading: const Icon(Icons.stars,
-                          color: AppColors.accent, size: 40),
+                          color: Colors.white, size: 40),
                       title: const Text(
                         'Eco Points',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-                      subtitle: const Text('Total: 0 ⭐'),
+                      subtitle: const Text('Total: 0 ⭐',
+                          style: TextStyle(color: Colors.white70)),
                       trailing: TextButton(
                         onPressed: () {
                           setState(() => _selectedIndex = 4);
                         },
-                        child: const Text('View'),
+                        child: const Text(
+                          'View',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ),
@@ -177,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  Expanded(child: _buildQuickActions()),
+                  _buildQuickActions(),
                 ],
               ),
             ),
@@ -191,19 +227,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(amount,
-              style:
-                  const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          Text(symbol,
               style: const TextStyle(
-                  fontSize: 15, color: AppColors.textSecondary)),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
+          Text(symbol,
+              style: const TextStyle(fontSize: 15, color: Colors.white70)),
         ],
       ),
     );
@@ -240,9 +276,15 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              // ignore: deprecated_member_use
-              color: AppColors.primary.withOpacity(0.12),
+              color: Colors.white.withOpacity(0.1),
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Icon(icon, color: AppColors.primary, size: 28),
           ),
@@ -253,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🌿 Wallet Action Bottom Sheet
+  // Wallet and Donate Bottom Sheets remain unchanged
   void _showWalletActionSheet(String action) {
     showModalBottomSheet(
       context: context,
@@ -306,7 +348,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 💚 Donate Sheet
   void _showDonateSheet() {
     showModalBottomSheet(
       context: context,
