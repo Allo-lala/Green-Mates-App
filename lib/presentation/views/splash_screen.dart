@@ -1,29 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../core/constants/app_colors.dart';
+import '../../providers/auth_provider.dart';
+import 'login_screen.dart';
 import 'home_screen.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
+    _checkAuthAndNavigate();
   }
 
-  Future<void> _navigateToHome() async {
+  Future<void> _checkAuthAndNavigate() async {
     await Future.delayed(const Duration(seconds: 3));
-    if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
-    }
+
+    if (!mounted) return;
+
+    final user = ref.read(currentUserProvider);
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) =>
+            user != null ? const HomeScreen() : const LoginScreen(),
+      ),
+    );
   }
 
   @override
@@ -42,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
             FadeInUp(
               duration: const Duration(milliseconds: 800),
               child: const Text(
-                'Goo Green Mates',
+                'Go Green Mates',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -53,10 +62,9 @@ class _SplashScreenState extends State<SplashScreen> {
             const SizedBox(height: 12),
             FadeInUp(
               duration: const Duration(milliseconds: 1000),
-              // ignore: prefer_const_constructors
               delay: Duration(milliseconds: 200),
               child: const Text(
-                'Engage Empower Earn',
+                'Eco-friendly living on blockchain',
                 style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
             ),

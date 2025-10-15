@@ -1,7 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/app_colors.dart';
+import '../../providers/auth_provider.dart';
+import 'profile_screen.dart';
 
 // Additional screens
 import 'services_screen.dart';
@@ -10,28 +13,45 @@ import 'wallet_screen.dart';
 import 'events_screen.dart';
 import 'eco_points_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(currentUserProvider);
+
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Go Green Mates'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.person_outline),
-            onPressed: () {},
+            icon: user?.profileImage != null
+                ? CircleAvatar(
+                    radius: 16,
+                    backgroundImage: NetworkImage(user!.profileImage!),
+                  )
+                : const Icon(Icons.person_outline),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -46,9 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag), label: 'Services'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.volunteer_activism), label: 'Campaigns'),
+              icon: Icon(Icons.volunteer_activism), label: 'Go Green'),
           BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Events'),
-          BottomNavigationBarItem(icon: Icon(Icons.stars), label: 'Points'),
           BottomNavigationBarItem(icon: Icon(Icons.wallet), label: 'Wallet'),
         ],
       ),
@@ -145,9 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 20),
                         Row(
                           children: [
-                            Expanded(child: _balanceItem('CELO', '0.00')),
+                            Expanded(child: _balanceItem('CELO', '12.00')),
                             const SizedBox(width: 20),
-                            Expanded(child: _balanceItem('cUSD', '0.00')),
+                            Expanded(child: _balanceItem('cUSD', '13.11')),
                           ],
                         ),
                       ],
@@ -162,12 +181,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          // ignore: duplicate_ignore
-                          // ignore: deprecated_member_use
-                          AppColors.accent.withOpacity(0.8),
-                          // ignore: duplicate_ignore
-                          // ignore: deprecated_member_use
-                          AppColors.accent.withOpacity(0.4)
+                          AppColors.accent.withValues(alpha: 0.8),
+                          AppColors.accent.withValues(alpha: 0.4),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -191,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
                       ),
-                      subtitle: const Text('Total: 0 ⭐',
+                      subtitle: const Text('Total: 55',
                           style: TextStyle(color: Colors.white70)),
                       trailing: TextButton(
                         onPressed: () {
@@ -227,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -276,11 +291,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -295,7 +310,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Wallet and Donate Bottom Sheets remain unchanged
   void _showWalletActionSheet(String action) {
     showModalBottomSheet(
       context: context,
