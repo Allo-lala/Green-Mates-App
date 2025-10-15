@@ -52,7 +52,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 FadeInUp(
                   duration: const Duration(milliseconds: 800),
                   child: const Text(
-                    'Go Green Mates',
+                    'Goo Green Mates',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 32,
@@ -68,7 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   duration: const Duration(milliseconds: 900),
                   delay: const Duration(milliseconds: 100),
                   child: const Text(
-                    'Eco-Friendly Living on Blockchain',
+                    'Engage Empower Earn',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
@@ -96,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: _buildFeature(
                     icon: Icons.payment,
                     title: 'Eco Payments',
-                    description: 'Pay with CELO or cUSD directly',
+                    description: 'Pay with crypto directly',
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -107,7 +107,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: _buildFeature(
                     icon: Icons.stars,
                     title: 'Earn Rewards',
-                    description: 'Get eco-points for every action',
+                    description: 'Get green-points for every action',
                   ),
                 ),
                 const SizedBox(height: 48),

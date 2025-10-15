@@ -51,7 +51,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             FadeInUp(
               duration: const Duration(milliseconds: 800),
               child: const Text(
-                'Go Green Mates',
+                'Goo Green Mates',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -64,7 +64,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               duration: const Duration(milliseconds: 1000),
               delay: Duration(milliseconds: 200),
               child: const Text(
-                'Eco-friendly living on blockchain',
+                'Engage Empower Earn',
                 style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
             ),

@@ -182,7 +182,7 @@ class _WalletScreenState extends State<WalletScreen> {
         ),
         const SizedBox(height: 12),
         _buildTransaction(
-            'Service Payment', 'Electric Bike Rental', '-5.50 cUSD', '+55 pts'),
+            'Service Payment', 'Electric Bike', '-5.50 cUSD', '+55 pts'),
         _buildTransaction(
             'Donation', 'Tree Planting Campaign', '-10.00 CELO', '+100 pts'),
         _buildTransaction('Received', 'From Friend', '+25.00 cUSD', ''),

@@ -8,7 +8,7 @@ class EcoPointsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Eco Points'),
+        title: const Text(' '),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
@@ -43,7 +43,7 @@ class EcoPointsScreen extends StatelessWidget {
     );
   }
 
-  // ================== OVERVIEW ==================
+  // ---- OVERVIEW -----------------
   Widget _buildPointsOverview() {
     return Container(
       padding: const EdgeInsets.all(24),
@@ -61,7 +61,7 @@ class EcoPointsScreen extends StatelessWidget {
               Icon(Icons.stars, size: 32, color: Colors.white),
               SizedBox(width: 12),
               Text(
-                'Total Eco Points',
+                'Total Green Points',
                 style: TextStyle(fontSize: 18, color: Colors.white70),
               ),
             ],

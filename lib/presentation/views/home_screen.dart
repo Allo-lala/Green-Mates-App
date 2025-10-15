@@ -29,7 +29,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Go Green Mates'),
+        title: const Text(''),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -66,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag), label: 'Services'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.volunteer_activism), label: 'Go Green'),
+              icon: Icon(Icons.volunteer_activism), label: 'Goo Green'),
           BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Events'),
           BottomNavigationBarItem(icon: Icon(Icons.wallet), label: 'Wallet'),
         ],
@@ -200,7 +200,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       leading: const Icon(Icons.stars,
                           color: Colors.white, size: 40),
                       title: const Text(
-                        'Eco Points',
+                        'Green Points',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -378,11 +378,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.star, color: Colors.amber),
-              title: const Text('Use Eco Points'),
+              title: const Text('Use Green Points'),
               onTap: () {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Donating with Eco Points...')),
+                  const SnackBar(
+                      content: Text('Donating with Green Points...')),
                 );
               },
             ),

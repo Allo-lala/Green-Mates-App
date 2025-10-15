@@ -10,7 +10,7 @@ class ServicesScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         const Text(
-          'Eco Services',
+          ' ',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
