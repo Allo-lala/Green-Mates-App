@@ -1,8 +1,7 @@
-// ignore: unused_import
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../core/utils/logger.dart';
+import 'metamask_service.dart';
 
 class User {
   final String id;
@@ -81,8 +80,9 @@ class User {
       ecoPoints: json['ecoPoints'] ?? 0,
       totalDonated: (json['totalDonated'] as num?)?.toDouble() ?? 0.0,
       servicesUsed: json['servicesUsed'] ?? 0,
-      createdAt:
-          DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+        json['createdAt'] ?? DateTime.now().toIso8601String(),
+      ),
       isAuthenticated: true,
     );
   }
@@ -91,42 +91,38 @@ class User {
 class AuthService {
   final SharedPreferences prefs;
   final FlutterSecureStorage secureStorage;
+  final MetaMaskService metaMaskService;
 
   AuthService({
     required this.prefs,
     required this.secureStorage,
+    required this.metaMaskService,
   });
 
-  // Mock MetaMask connection
+  /// Connect wallet via MetaMaskService
   Future<String?> connectMetaMask() async {
     try {
-      AppLogger.i('Connecting to MetaMask...');
-
-      // Simulate wallet connection
-      await Future.delayed(const Duration(seconds: 2));
-
-      // Generate or use mock address
-      const mockAddress = '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb';
-
-      // In production, this would use actual MetaMask integration
-      await secureStorage.write(
-        key: 'wallet_address',
-        value: mockAddress,
-      );
-
-      AppLogger.i('Connected: $mockAddress');
-      return mockAddress;
+      final walletAddress = await metaMaskService.connectWallet();
+      if (walletAddress != null) {
+        await secureStorage.write(key: 'wallet_address', value: walletAddress);
+        AppLogger.i('Connected: $walletAddress');
+      }
+      return walletAddress;
     } catch (e) {
       AppLogger.e('MetaMask connection failed', e);
       return null;
     }
   }
 
-  // Create user after wallet connection
+  /// Check if wallet is connected
+  Future<bool> isMetaMaskInstalled() async {
+    return metaMaskService.isConnected;
+  }
+
+  /// Create user after wallet connection
   Future<User?> createUser(String walletAddress) async {
     try {
       final userId = 'user_${DateTime.now().millisecondsSinceEpoch}';
-
       final user = User(
         id: userId,
         walletAddress: walletAddress,
@@ -134,16 +130,12 @@ class AuthService {
         isAuthenticated: true,
       );
 
-      // Save user to secure storage
       await secureStorage.write(
-        key: 'user_data',
-        value: user.toJson().toString(),
-      );
-
-      // Save to preferences
+          key: 'user_data', value: user.toJson().toString());
       await prefs.setString('user_id', userId);
       await prefs.setString('wallet_address', walletAddress);
       await prefs.setBool('is_authenticated', true);
+      await prefs.setString('created_at', DateTime.now().toIso8601String());
 
       AppLogger.i('User created: $userId');
       return user;
@@ -153,23 +145,17 @@ class AuthService {
     }
   }
 
-  // Get current user
+  /// Get current user
   Future<User?> getCurrentUser() async {
     try {
       final userId = prefs.getString('user_id');
       final walletAddress = prefs.getString('wallet_address');
-
-      if (userId == null || walletAddress == null) {
-        return null;
-      }
-
       final isAuthenticated = prefs.getBool('is_authenticated') ?? false;
 
-      if (!isAuthenticated) {
+      if (userId == null || walletAddress == null || !isAuthenticated) {
         return null;
       }
 
-      // In production, fetch from Firestore
       return User(
         id: userId,
         walletAddress: walletAddress,
@@ -191,7 +177,7 @@ class AuthService {
     }
   }
 
-  // Update user profile
+  /// Update user profile
   Future<bool> updateUserProfile({
     required String userId,
     String? name,
@@ -206,7 +192,6 @@ class AuthService {
       if (profileImage != null) {
         await prefs.setString('user_profile_image', profileImage);
       }
-
       AppLogger.i('Profile updated');
       return true;
     } catch (e) {
@@ -215,31 +200,20 @@ class AuthService {
     }
   }
 
-  // Sign out
+  /// Sign out
   Future<void> signOut() async {
     try {
-      await prefs.remove('user_id');
-      await prefs.remove('wallet_address');
-      await prefs.remove('is_authenticated');
-      await prefs.remove('user_name');
-      await prefs.remove('user_email');
-      await prefs.remove('user_bio');
-      await prefs.remove('user_profile_image');
-      await secureStorage.delete(key: 'wallet_address');
-
+      await metaMaskService.disconnect();
+      await prefs.clear();
+      await secureStorage.deleteAll();
       AppLogger.i('User signed out');
     } catch (e) {
       AppLogger.e('Sign out failed', e);
     }
   }
 
-  // Check if user is authenticated
-  bool isUserAuthenticated() {
-    return prefs.getBool('is_authenticated') ?? false;
-  }
-
-  // Get wallet address
-  String? getWalletAddress() {
-    return prefs.getString('wallet_address');
+  /// Get wallet balances
+  Future<Map<String, BigInt>> getWalletBalance() async {
+    return await metaMaskService.getBalance();
   }
 }

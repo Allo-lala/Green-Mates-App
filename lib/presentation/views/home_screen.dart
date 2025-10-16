@@ -66,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag), label: 'Services'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.volunteer_activism), label: 'Goo Green'),
+              icon: Icon(Icons.volunteer_activism), label: 'Go Green'),
           BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Events'),
           BottomNavigationBarItem(icon: Icon(Icons.wallet), label: 'Wallet'),
         ],
@@ -109,7 +109,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [AppColors.primary, AppColors.primaryDark],
+                        colors: [
+                          Color(0xFF0077B5),
+                          Color(0xFF005983)
+                        ], // LinkedIn blue tones
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -137,12 +142,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                   const SizedBox(height: 24),
 
-                  // Balance Card with Gradient
+                  // Balance Card
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [AppColors.primary, AppColors.primaryDark],
+                        colors: [Color(0xFF0077B5), Color(0xFF005983)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: const [
@@ -175,48 +182,60 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                   const SizedBox(height: 24),
 
-                  // Eco Points Card with Gradient
+                  // Green Points Card
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.accent.withValues(alpha: 0.8),
-                          AppColors.accent.withValues(alpha: 0.4),
-                        ],
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF00C853), Color(0xFF00A94F)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: const [
                         BoxShadow(
-                          color: Colors.black12,
+                          color: Colors.black26,
                           blurRadius: 8,
                           offset: Offset(0, 4),
                         ),
                       ],
                     ),
-                    child: ListTile(
-                      leading: const Icon(Icons.stars,
-                          color: Colors.white, size: 40),
-                      title: const Text(
-                        'Green Points',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      subtitle: const Text('Total: 55',
-                          style: TextStyle(color: Colors.white70)),
-                      trailing: TextButton(
-                        onPressed: () {
-                          setState(() => _selectedIndex = 4);
-                        },
-                        child: const Text(
-                          'View',
-                          style: TextStyle(color: Colors.white),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.stars, color: Colors.white, size: 48),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text('Green Points',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                              SizedBox(height: 4),
+                              Text('Total: 55',
+                                  style: TextStyle(color: Colors.white70)),
+                            ],
+                          ),
                         ),
-                      ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() => _selectedIndex = 4);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF00A94F),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            elevation: 4,
+                          ),
+                          child: const Text('View'),
+                        ),
+                      ],
                     ),
                   ),
 
@@ -228,7 +247,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  _buildQuickActions(),
+                  // Quick Actions card
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.15),
+                          blurRadius: 10,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _quickAction(Icons.send, 'Send'),
+                        _quickAction(Icons.download, 'Receive'),
+                        _quickAction(Icons.event, 'Tickets'),
+                        _quickAction(Icons.favorite, 'Donate'),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -242,7 +285,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.1),
+        color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -260,18 +303,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildQuickActions() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _quickAction(Icons.send, 'Send'),
-        _quickAction(Icons.download, 'Receive'),
-        _quickAction(Icons.event, 'Tickets'),
-        _quickAction(Icons.favorite, 'Donate'),
-      ],
-    );
-  }
-
   Widget _quickAction(IconData icon, String label) {
     return Column(
       children: [
@@ -282,20 +313,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               _showWalletActionSheet(label);
             } else if (label == 'Donate') {
               _showDonateSheet();
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('$label action coming soon!')),
+            } else if (label == 'Tickets') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EventsScreen(),
+                ),
               );
             }
           },
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: const Color(0xFFF5F8FA),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: Colors.grey.withOpacity(0.15),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -305,7 +339,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        Text(label, style: const TextStyle(fontSize: 14)),
+        Text(label,
+            style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.black)),
       ],
     );
   }
@@ -314,8 +352,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -366,8 +403,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => Padding(
         padding: const EdgeInsets.all(24),
         child: Column(

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
@@ -15,280 +17,307 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isLoading = false;
   String? _errorMessage;
+  bool _isMetaMaskInstalled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkMetaMask();
+  }
+
+  Future<void> _checkMetaMask() async {
+    final authService = await ref.read(authServiceProvider.future);
+    final installed = await authService.isMetaMaskInstalled();
+    setState(() => _isMetaMaskInstalled = installed);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 40),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 40),
 
-                // Logo
-                FadeInDown(
-                  duration: const Duration(milliseconds: 800),
+              // App Logo
+              FadeInDown(
+                duration: const Duration(milliseconds: 800),
+                child: Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 255, 255, 255)
+                        .withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child:
+                      const Icon(Icons.eco, size: 80, color: AppColors.primary),
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Title
+              FadeInUp(
+                duration: const Duration(milliseconds: 800),
+                child: const Text(
+                  'Goo Green Mates',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              FadeInUp(
+                duration: const Duration(milliseconds: 900),
+                delay: const Duration(milliseconds: 100),
+                child: const Text(
+                  'Engage ○ Empower ● Earn',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 48),
+
+              // Features
+              _buildFeature(Icons.account_balance_wallet,
+                  'Secure Wallet Connection', 'Connect with MetaMask securely'),
+              const SizedBox(height: 16),
+              _buildFeature(Icons.payment, 'Crypto Payments',
+                  'Pay with crypto instantly and securely'),
+              const SizedBox(height: 16),
+              _buildFeature(Icons.stars, 'Earn Green-Points',
+                  'Get rewards for every eco-friendly action'),
+              const SizedBox(height: 48),
+
+              // Error Message
+              if (_errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
                   child: Container(
-                    height: 120,
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      // ignore: deprecated_member_use
-                      color: AppColors.primary.withOpacity(0.1),
-                      shape: BoxShape.circle,
+                      color: AppColors.error.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.error),
                     ),
-                    child: const Icon(
-                      Icons.eco,
-                      size: 80,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                // Title
-                FadeInUp(
-                  duration: const Duration(milliseconds: 800),
-                  child: const Text(
-                    'Goo Green Mates',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Subtitle
-                FadeInUp(
-                  duration: const Duration(milliseconds: 900),
-                  delay: const Duration(milliseconds: 100),
-                  child: const Text(
-                    'Engage Empower Earn',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 48),
-
-                // Features
-                FadeInUp(
-                  duration: const Duration(milliseconds: 1000),
-                  delay: const Duration(milliseconds: 200),
-                  child: _buildFeature(
-                    icon: Icons.account_balance_wallet,
-                    title: 'Connect Your Wallet',
-                    description: 'Use MetaMask or any Web3 wallet',
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                FadeInUp(
-                  duration: const Duration(milliseconds: 1000),
-                  delay: const Duration(milliseconds: 300),
-                  child: _buildFeature(
-                    icon: Icons.payment,
-                    title: 'Eco Payments',
-                    description: 'Pay with crypto directly',
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                FadeInUp(
-                  duration: const Duration(milliseconds: 1000),
-                  delay: const Duration(milliseconds: 400),
-                  child: _buildFeature(
-                    icon: Icons.stars,
-                    title: 'Earn Rewards',
-                    description: 'Get green-points for every action',
-                  ),
-                ),
-                const SizedBox(height: 48),
-
-                // Error Message
-                if (_errorMessage != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        // ignore: deprecated_member_use
-                        color: AppColors.error.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: AppColors.error),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.error_outline,
-                              color: AppColors.error),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              _errorMessage!,
-                              style: const TextStyle(
-                                color: AppColors.error,
-                                fontSize: 14,
-                              ),
-                            ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.error_outline, color: AppColors.error),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            _errorMessage!,
+                            style: const TextStyle(
+                                color: AppColors.error, fontSize: 14),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                // Connect Wallet Button
-                FadeInUp(
-                  duration: const Duration(milliseconds: 1100),
-                  delay: const Duration(milliseconds: 500),
-                  child: ElevatedButton.icon(
-                    onPressed: _isLoading ? null : _connectWallet,
-                    icon: _isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : const Icon(Icons.account_balance_wallet),
-                    label: Text(
-                      _isLoading ? 'Connecting...' : 'Connect with MetaMask',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: AppColors.primary,
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
 
-                // Alternative wallets
-                FadeInUp(
-                  duration: const Duration(milliseconds: 1200),
-                  delay: const Duration(milliseconds: 600),
-                  child: OutlinedButton.icon(
-                    onPressed: _isLoading ? null : _connectWallet,
-                    icon: const Icon(Icons.wallet),
-                    label: const Text('Connect with Valora'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      side: const BorderSide(
-                        color: AppColors.primary,
-                        width: 2,
-                      ),
+              // --- MetaMask Button (White Style) ---
+              FadeInUp(
+                duration: const Duration(milliseconds: 1100),
+                delay: const Duration(milliseconds: 500),
+                child: ElevatedButton.icon(
+                  onPressed: _isLoading ? null : _connectMetaMask,
+                  icon: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.black),
+                          ),
+                        )
+                      : Image.asset(
+                          'assets/images/metamask_logo.png',
+                          height: 28,
+                          width: 28,
+                          fit: BoxFit.contain,
+                        ),
+                  label: Text(
+                    _isLoading ? 'Connecting...' : 'Connect with MetaMask',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
                     ),
                   ),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 20),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      side: BorderSide(
+                        color: Colors.grey.shade300,
+                        width: 1.5,
+                      ),
+                    ),
+                    elevation: 3,
+                    shadowColor: Colors.grey.withOpacity(0.3),
+                  ),
                 ),
-                const SizedBox(height: 24),
+              ),
 
-                // Terms
-                FadeInUp(
-                  duration: const Duration(milliseconds: 1300),
-                  delay: const Duration(milliseconds: 700),
-                  child: Text(
-                    'By connecting, you agree to our Terms of Service and Privacy Policy',
-                    textAlign: TextAlign.center,
+              const SizedBox(height: 16),
+
+              // --- Continue Without Account ---
+              FadeInUp(
+                duration: const Duration(milliseconds: 1200),
+                delay: const Duration(milliseconds: 600),
+                child: TextButton(
+                  onPressed: _continueWithoutAccount,
+                  child: const Text(
+                    'Continue without an account',
                     style: TextStyle(
-                      fontSize: 12,
-                      // ignore: deprecated_member_use
-                      color: AppColors.textSecondary.withOpacity(0.7),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                      decoration: TextDecoration.underline,
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
+              ),
+
+              if (!_isMetaMaskInstalled) ...[
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: _installMetaMask,
+                  icon: const Icon(Icons.download),
+                  label: const Text('Install MetaMask'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    side: const BorderSide(
+                      color: Color(0xFFF6851B),
+                      width: 2,
+                    ),
+                    foregroundColor: const Color(0xFFF6851B),
+                  ),
+                ),
               ],
-            ),
+
+              const SizedBox(height: 24),
+
+              Text(
+                'By connecting, you agree to our Terms of Service\nand Privacy Policy',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary.withOpacity(0.7),
+                ),
+              ),
+              const SizedBox(height: 40),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildFeature({
-    required IconData icon,
-    required String title,
-    required String description,
-  }) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            // ignore: deprecated_member_use
-            color: AppColors.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, size: 24, color: AppColors.primary),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+  Widget _buildFeature(IconData icon, String title, String description) {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 1000),
+      child: Row(
+        children: [
+          // 🔹 Clean icon — no background or shadow
+          Icon(icon, size: 26, color: AppColors.primary),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                description,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Future<void> _connectWallet() async {
+  Future<void> _connectMetaMask() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
-    try {
-      final success =
-          await ref.read(currentUserProvider.notifier).connectWallet();
+    Future.microtask(() async {
+      try {
+        final success =
+            await ref.read(currentUserProvider.notifier).connectWallet();
 
-      if (!mounted) return;
+        if (!mounted) return;
 
-      if (success) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-      } else {
+        if (success) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const HomeScreen()),
+          );
+        } else {
+          setState(() {
+            _errorMessage = 'Failed to connect wallet. Please try again.';
+          });
+        }
+      } catch (e) {
         setState(() {
-          _errorMessage = 'Failed to connect wallet. Please try again.';
+          _errorMessage = 'Connection error: $e';
         });
+      } finally {
+        if (mounted) setState(() => _isLoading = false);
       }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Connection error: $e';
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    });
+  }
+
+  void _continueWithoutAccount() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const HomeScreen()),
+    );
+  }
+
+  void _installMetaMask() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Install MetaMask'),
+        content: const Text(
+            'MetaMask is not installed. Would you like to install it from the app store?'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Install'),
+          ),
+        ],
+      ),
+    );
   }
 }

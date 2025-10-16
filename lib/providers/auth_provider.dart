@@ -2,12 +2,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../services/auth_service.dart';
+import '../services/metamask_service.dart';
 
 // Auth service provider
 final authServiceProvider = FutureProvider<AuthService>((ref) async {
   final prefs = await SharedPreferences.getInstance();
   const secureStorage = FlutterSecureStorage();
-  return AuthService(prefs: prefs, secureStorage: secureStorage);
+  final metaMaskService = MetaMaskService(); // create instance
+  return AuthService(
+    prefs: prefs,
+    secureStorage: secureStorage,
+    metaMaskService: metaMaskService,
+  );
 });
 
 // Current user provider
@@ -28,7 +34,7 @@ class CurrentUserNotifier extends StateNotifier<User?> {
       final authService = await ref.read(authServiceProvider.future);
       final user = await authService.getCurrentUser();
       state = user;
-    } catch (e) {
+    } catch (_) {
       state = null;
     }
   }
@@ -37,10 +43,7 @@ class CurrentUserNotifier extends StateNotifier<User?> {
     try {
       final authService = await ref.read(authServiceProvider.future);
       final walletAddress = await authService.connectMetaMask();
-
-      if (walletAddress == null) {
-        return false;
-      }
+      if (walletAddress == null) return false;
 
       final user = await authService.createUser(walletAddress);
       if (user != null) {
@@ -48,7 +51,7 @@ class CurrentUserNotifier extends StateNotifier<User?> {
         return true;
       }
       return false;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   }
@@ -59,9 +62,8 @@ class CurrentUserNotifier extends StateNotifier<User?> {
     String? bio,
     String? profileImage,
   }) async {
+    if (state == null) return false;
     try {
-      if (state == null) return false;
-
       final authService = await ref.read(authServiceProvider.future);
       final success = await authService.updateUserProfile(
         userId: state!.id,
@@ -79,9 +81,8 @@ class CurrentUserNotifier extends StateNotifier<User?> {
           profileImage: profileImage,
         );
       }
-
       return success;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   }
@@ -91,8 +92,6 @@ class CurrentUserNotifier extends StateNotifier<User?> {
       final authService = await ref.read(authServiceProvider.future);
       await authService.signOut();
       state = null;
-    } catch (e) {
-      // Handle error
-    }
+    } catch (_) {}
   }
 }

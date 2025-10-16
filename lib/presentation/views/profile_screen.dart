@@ -212,7 +212,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Expanded(
                   child: _buildStatCard(
                     '${user.ecoPoints}',
-                    'Eco Points',
+                    'Green Points',
                     Icons.stars,
                   ),
                 ),

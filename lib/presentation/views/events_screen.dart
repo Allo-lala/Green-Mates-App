@@ -1,6 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 import 'package:intl/intl.dart';
+import '../../core/constants/app_colors.dart';
 
 class EventsScreen extends StatelessWidget {
   const EventsScreen({super.key});
@@ -9,33 +11,30 @@ class EventsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Column(
-        children: [
-          Container(
-            color: Colors.white,
-            child: const TabBar(
-              labelColor: AppColors.primary,
-              unselectedLabelColor: AppColors.textSecondary,
-              indicatorColor: AppColors.primary,
-              tabs: [
-                Tab(text: 'Upcoming Events'),
-                Tab(text: 'My Tickets'),
-              ],
-            ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Events & Tickets',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                _buildUpcomingEvents(context),
-                _buildMyTickets(context),
-              ],
-            ),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Upcoming'),
+              Tab(text: 'My Tickets'),
+            ],
           ),
-        ],
+        ),
+        body: TabBarView(
+          children: [
+            _buildUpcomingEvents(context),
+            _buildMyTickets(context),
+          ],
+        ),
       ),
     );
   }
 
+  // -------------------- UPCOMING EVENTS --------------------
   Widget _buildUpcomingEvents(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -144,9 +143,7 @@ class EventsScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    // ignore: deprecated_member_use
                     AppColors.primary.withOpacity(0.3),
-                    // ignore: deprecated_member_use
                     AppColors.accent.withOpacity(0.3),
                   ],
                 ),
@@ -155,10 +152,7 @@ class EventsScreen extends StatelessWidget {
                 children: [
                   Center(
                     child: Icon(icon,
-                        // ignore: deprecated_member_use
-                        size: 80,
-                        // ignore: deprecated_member_use
-                        color: Colors.white.withOpacity(0.5)),
+                        size: 80, color: Colors.white.withOpacity(0.5)),
                   ),
                   Positioned(
                     top: 12,
@@ -311,145 +305,6 @@ class EventsScreen extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMyTickets(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _buildTicketCard(
-          context,
-          'Sustainability Workshop',
-          DateTime(2025, 10, 20, 14, 0),
-          'Online Event',
-          'TICKET-2025-001',
-          'Active',
-        ),
-        const SizedBox(height: 12),
-        _buildTicketCard(
-          context,
-          'Tree Planting Marathon',
-          DateTime(2025, 10, 28, 7, 0),
-          'Kampala, Uganda',
-          'TICKET-2025-002',
-          'Active',
-        ),
-        const SizedBox(height: 12),
-        _buildTicketCard(
-          context,
-          'Climate Change Conference',
-          DateTime(2025, 9, 15, 9, 0),
-          'Nairobi, Kenya',
-          'TICKET-2025-003',
-          'Used',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTicketCard(
-    BuildContext context,
-    String title,
-    DateTime dateTime,
-    String location,
-    String ticketNumber,
-    String status,
-  ) {
-    final dateFormat = DateFormat('MMM dd, yyyy • HH:mm');
-    final isActive = status == 'Active';
-
-    return Card(
-      child: InkWell(
-        onTap: () => _showTicketDetails(
-            context, title, dateTime, location, ticketNumber, status),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: isActive
-                          // ignore: deprecated_member_use
-                          ? AppColors.success.withOpacity(0.1)
-                          // ignore: deprecated_member_use
-                          : AppColors.textSecondary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      status,
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: isActive
-                            ? AppColors.success
-                            : AppColors.textSecondary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Icon(Icons.access_time,
-                      size: 14, color: AppColors.textSecondary),
-                  const SizedBox(width: 4),
-                  Text(
-                    dateFormat.format(dateTime),
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.textSecondary),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Icon(Icons.location_on,
-                      size: 14, color: AppColors.textSecondary),
-                  const SizedBox(width: 4),
-                  Text(
-                    location,
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.textSecondary),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  const Icon(Icons.qr_code_2,
-                      size: 16, color: AppColors.primary),
-                  const SizedBox(width: 8),
-                  Text(
-                    ticketNumber,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'monospace',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -629,6 +484,144 @@ class EventsScreen extends StatelessWidget {
             child: const Text('Done'),
           ),
         ],
+      ),
+    );
+  }
+
+  // -------------------- MY TICKETS --------------------
+  Widget _buildMyTickets(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        _buildTicketCard(
+          context,
+          'Sustainability Workshop',
+          DateTime(2025, 10, 20, 14, 0),
+          'Online Event',
+          'TICKET-2025-001',
+          'Active',
+        ),
+        const SizedBox(height: 12),
+        _buildTicketCard(
+          context,
+          'Tree Planting Marathon',
+          DateTime(2025, 10, 28, 7, 0),
+          'Kampala, Uganda',
+          'TICKET-2025-002',
+          'Active',
+        ),
+        const SizedBox(height: 12),
+        _buildTicketCard(
+          context,
+          'Climate Change Conference',
+          DateTime(2025, 9, 15, 9, 0),
+          'Nairobi, Kenya',
+          'TICKET-2025-003',
+          'Used',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTicketCard(
+    BuildContext context,
+    String title,
+    DateTime dateTime,
+    String location,
+    String ticketNumber,
+    String status,
+  ) {
+    final dateFormat = DateFormat('MMM dd, yyyy • HH:mm');
+    final isActive = status == 'Active';
+
+    return Card(
+      child: InkWell(
+        onTap: () => _showTicketDetails(
+            context, title, dateTime, location, ticketNumber, status),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isActive
+                          ? AppColors.success.withOpacity(0.1)
+                          : AppColors.textSecondary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      status,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: isActive
+                            ? AppColors.success
+                            : AppColors.textSecondary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(Icons.access_time,
+                      size: 14, color: AppColors.textSecondary),
+                  const SizedBox(width: 4),
+                  Text(
+                    dateFormat.format(dateTime),
+                    style: const TextStyle(
+                        fontSize: 12, color: AppColors.textSecondary),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.location_on,
+                      size: 14, color: AppColors.textSecondary),
+                  const SizedBox(width: 4),
+                  Text(
+                    location,
+                    style: const TextStyle(
+                        fontSize: 12, color: AppColors.textSecondary),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  const Icon(Icons.qr_code_2,
+                      size: 16, color: AppColors.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    ticketNumber,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'monospace',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
