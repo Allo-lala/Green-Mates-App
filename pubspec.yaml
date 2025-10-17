@@ -30,13 +30,22 @@ dependencies:
   
   web3auth_flutter: ^6.1.2
 
+  flutter_launcher_icons: ^0.14.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  # flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo.png"
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/metamask_logo.png
-    # - assets/images/valora_logo.jpg
+    - assets/images/logo.png
+

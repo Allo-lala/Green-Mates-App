@@ -62,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               FadeInUp(
                 duration: const Duration(milliseconds: 800),
                 child: const Text(
-                  'Goo Green Mates',
+                  'Grin Mates',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 32,

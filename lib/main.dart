@@ -17,7 +17,7 @@ class GoGreenMatesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Go Green Mates',
+      title: 'Goo Green Mates',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: AppColors.primary,
