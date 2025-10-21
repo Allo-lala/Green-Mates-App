@@ -2,7 +2,7 @@
     <application
         android:label="go_green_mates"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/new_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

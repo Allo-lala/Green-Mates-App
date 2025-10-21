@@ -171,9 +171,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         const SizedBox(height: 20),
                         Row(
                           children: [
-                            Expanded(child: _balanceItem('CELO', '12.00')),
+                            Expanded(child: _balanceItem('CELO', '0.00')),
                             const SizedBox(width: 20),
-                            Expanded(child: _balanceItem('cUSD', '13.11')),
+                            Expanded(child: _balanceItem('cUSD', '0.00')),
                           ],
                         ),
                       ],
