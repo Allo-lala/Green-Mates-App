@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/metamask_service.dart';
 
@@ -8,7 +11,7 @@ import '../services/metamask_service.dart';
 final authServiceProvider = FutureProvider<AuthService>((ref) async {
   final prefs = await SharedPreferences.getInstance();
   const secureStorage = FlutterSecureStorage();
-  final metaMaskService = MetaMaskService(); // create instance
+  final metaMaskService = MetaMaskService();
   return AuthService(
     prefs: prefs,
     secureStorage: secureStorage,
@@ -39,10 +42,10 @@ class CurrentUserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<bool> connectWallet() async {
+  Future<bool> connectWallet({BuildContext? context}) async {
     try {
       final authService = await ref.read(authServiceProvider.future);
-      final walletAddress = await authService.connectMetaMask();
+      final walletAddress = await authService.connectMetaMask(context: context);
       if (walletAddress == null) return false;
 
       final user = await authService.createUser(walletAddress);

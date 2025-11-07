@@ -40,18 +40,29 @@ class OnboardingPageWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 60),
+            const SizedBox(height: 40),
             Container(
-              width: 140,
-              height: 140,
+              width: 200,
+              height: 200,
               decoration: BoxDecoration(
                 color: AppColors.primaryLight.withOpacity(0.15),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                page.icon,
-                size: 70,
-                color: AppColors.primary,
+              child: Center(
+                child: Image.asset(
+                  page.imagePath,
+                  width: 180,
+                  height: 180,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    // Fallback to icon if image not found
+                    return Icon(
+                      page.icon,
+                      size: 100,
+                      color: AppColors.primary,
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 40),

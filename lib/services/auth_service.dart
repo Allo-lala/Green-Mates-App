@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/material.dart';
 import '../core/utils/logger.dart';
 import 'metamask_service.dart';
 
@@ -100,9 +101,10 @@ class AuthService {
   });
 
   /// Connect wallet via MetaMaskService
-  Future<String?> connectMetaMask() async {
+  Future<String?> connectMetaMask({BuildContext? context}) async {
     try {
-      final walletAddress = await metaMaskService.connectWallet();
+      final walletAddress =
+          await metaMaskService.connectWallet(context: context);
       if (walletAddress != null) {
         await secureStorage.write(key: 'wallet_address', value: walletAddress);
         AppLogger.i('Connected: $walletAddress');

@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, unused_import
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,8 +6,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
-// import '../../services/metamask_service.dart';
-// import '../../widgets/app_button.dart';
+import '../../services/metamask_service.dart';
+import '../../widgets/app_button.dart';
 import 'home_screen.dart';
 import 'kyc_screen.dart';
 
@@ -79,7 +79,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 duration: const Duration(milliseconds: 900),
                 delay: const Duration(milliseconds: 100),
                 child: Text(
-                  'Engage ● Empower ● Earn',
+                  'Engage ○ Empower ● Earn',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     fontSize: 16,
@@ -150,7 +150,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.primary,
+                                Colors.white,
                               ),
                             ),
                           )
@@ -175,6 +175,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         borderRadius: BorderRadius.circular(14),
                       ),
                       elevation: 0,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              FadeInUp(
+                duration: const Duration(milliseconds: 1150),
+                delay: const Duration(milliseconds: 550),
+                child: OutlinedButton.icon(
+                  onPressed: _showMoreOptions,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Create or Import Account'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: const BorderSide(color: AppColors.primary, width: 2),
+                    foregroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
@@ -282,7 +300,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (success) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => KYCScreen(userId: 'current_user_id'),
+            builder: (_) => const KYCScreen(),
           ),
         );
       } else {
@@ -300,15 +318,127 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  void _showMoreOptions() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Connect Your Wallet'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.download_for_offline),
+              title: const Text('Import Existing Wallet'),
+              subtitle: const Text('Add a wallet using seed phrase'),
+              onTap: () {
+                Navigator.pop(context);
+                _showImportWalletDialog();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.add_circle),
+              title: const Text('Create New Wallet'),
+              subtitle: const Text('Generate a new wallet'),
+              onTap: () {
+                Navigator.pop(context);
+                _showCreateWalletDialog();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showImportWalletDialog() {
+    final seedController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Import Wallet'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: seedController,
+              decoration: const InputDecoration(
+                labelText: 'Seed Phrase',
+                hintText: 'Enter your 12 or 24 word seed phrase',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 4,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Wallet import feature coming soon'),
+                  backgroundColor: AppColors.warning,
+                ),
+              );
+            },
+            child: const Text('Import'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showCreateWalletDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Create Wallet'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Text(
+                'A new wallet will be created and secured locally on your device.'),
+            SizedBox(height: 16),
+            Text('Make sure to back up your seed phrase safely!'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Wallet creation feature coming soon'),
+                  backgroundColor: AppColors.warning,
+                ),
+              );
+            },
+            child: const Text('Create'),
+          ),
+        ],
+      ),
+    );
+  }
+
   String _parseErrorMessage(String error) {
     if (error.contains('MetaMask is not installed')) {
       return 'MetaMask is not installed. Please install it to continue.';
-    } else if (error.contains('timeout')) {
-      return 'Connection timeout. Please try again.';
+    } else if (error.contains('timeout') || error.contains('Timeout')) {
+      return 'Connection timed out. Please ensure MetaMask is open and try again.';
     } else if (error.contains('User rejected')) {
       return 'You rejected the connection. Please try again.';
-    } else if (error.contains('Session confirmation timeout')) {
-      return 'Session confirmation timed out. Please try again.';
+    } else if (error.contains('already in progress')) {
+      return 'A connection is already in progress. Please wait.';
+    } else if (error.contains('URI')) {
+      return 'Failed to generate connection link. Please try again.';
     } else {
       return 'Connection error: Please try again or check your internet connection.';
     }

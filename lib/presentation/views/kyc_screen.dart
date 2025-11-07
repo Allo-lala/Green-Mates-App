@@ -1,4 +1,4 @@
-// ignore_for_file: use_super_parameters, unused_local_variable, deprecated_member_use
+// ignore_for_file: deprecated_member_use, unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,16 +8,11 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../services/kyc_service.dart';
 import '../../widgets/app_button.dart';
-
 import 'home_screen.dart';
 
 class KYCScreen extends ConsumerStatefulWidget {
-  final String userId;
-
-  const KYCScreen({
-    required this.userId,
-    Key? key,
-  }) : super(key: key);
+  // ignore: use_super_parameters
+  const KYCScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<KYCScreen> createState() => _KYCScreenState();

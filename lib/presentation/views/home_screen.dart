@@ -11,7 +11,7 @@ import 'services_screen.dart';
 import 'campaigns_screen.dart';
 import 'wallet_screen.dart';
 import 'events_screen.dart';
-import 'eco_points_screen.dart';
+// import 'eco_points_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -85,8 +85,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       case 3:
         return const EventsScreen();
       case 4:
-        return const EcoPointsScreen();
-      case 5:
         return const WalletScreen();
       default:
         return _buildHome();

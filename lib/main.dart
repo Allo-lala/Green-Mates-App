@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import flutter_dotenv package
 import 'core/constants/app_colors.dart';
 import 'presentation/views/splash_screen.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
   runApp(
     const ProviderScope(
       child: GoGreenMatesApp(),
