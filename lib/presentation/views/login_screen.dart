@@ -3,9 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
+// import '../../services/metamask_service.dart';
+// import '../../widgets/app_button.dart';
 import 'home_screen.dart';
+import 'kyc_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -26,9 +30,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _checkMetaMask() async {
-    final authService = await ref.read(authServiceProvider.future);
-    final installed = await authService.isMetaMaskInstalled();
-    setState(() => _isMetaMaskInstalled = installed);
+    try {
+      final authService = await ref.read(authServiceProvider.future);
+      final installed = await authService.isMetaMaskInstalled();
+      setState(() => _isMetaMaskInstalled = installed);
+    } catch (_) {
+      setState(() => _isMetaMaskInstalled = false);
+    }
   }
 
   @override
@@ -41,15 +49,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 40),
-
-              // App Logo
               FadeInDown(
                 duration: const Duration(milliseconds: 800),
                 child: Container(
                   height: 120,
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 255, 255)
-                        .withOpacity(0.1),
+                    color: AppColors.primary.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
                   child:
@@ -57,37 +62,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-
-              // Title
               FadeInUp(
                 duration: const Duration(milliseconds: 800),
-                child: const Text(
+                child: Text(
                   'Grin Mates',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 32,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     color: AppColors.textPrimary,
                   ),
                 ),
               ),
               const SizedBox(height: 12),
-
               FadeInUp(
                 duration: const Duration(milliseconds: 900),
                 delay: const Duration(milliseconds: 100),
-                child: const Text(
-                  'Engage ○ Empower ● Earn',
+                child: Text(
+                  'Engage ● Empower ● Earn',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 16,
                     color: AppColors.textSecondary,
                   ),
                 ),
               ),
               const SizedBox(height: 48),
-
-              // Features
               _buildFeature(Icons.account_balance_wallet,
                   'Secure Wallet Connection', 'Connect with MetaMask securely'),
               const SizedBox(height: 16),
@@ -97,8 +97,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               _buildFeature(Icons.stars, 'Earn Green-Points',
                   'Get rewards for every eco-friendly action'),
               const SizedBox(height: 48),
-
-              // Error Message
               if (_errorMessage != null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16),
@@ -106,83 +104,90 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: AppColors.error.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.error),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.error, width: 1.5),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.error_outline, color: AppColors.error),
+                        const Icon(Icons.error_outline,
+                            color: AppColors.error, size: 20),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             _errorMessage!,
-                            style: const TextStyle(
-                                color: AppColors.error, fontSize: 14),
+                            style: GoogleFonts.inter(
+                              color: AppColors.error,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-
-              // --- MetaMask Button (White Style) ---
               FadeInUp(
                 duration: const Duration(milliseconds: 1100),
                 delay: const Duration(milliseconds: 500),
-                child: ElevatedButton.icon(
-                  onPressed: _isLoading ? null : _connectMetaMask,
-                  icon: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.black),
-                          ),
-                        )
-                      : Image.asset(
-                          'assets/images/metamask_logo.png',
-                          height: 28,
-                          width: 28,
-                          fit: BoxFit.contain,
-                        ),
-                  label: Text(
-                    _isLoading ? 'Connecting...' : 'Connect with MetaMask',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+                child: Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withOpacity(0.2),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 20),
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      side: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1.5,
+                  child: ElevatedButton.icon(
+                    onPressed: _isLoading ? null : _connectMetaMask,
+                    icon: _isLoading
+                        ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.primary,
+                              ),
+                            ),
+                          )
+                        : Image.asset(
+                            'assets/images/metamask_logo.png',
+                            height: 28,
+                            width: 28,
+                            fit: BoxFit.contain,
+                          ),
+                    label: Text(
+                      _isLoading ? 'Connecting...' : 'Connect with MetaMask',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
-                    elevation: 3,
-                    shadowColor: Colors.grey.withOpacity(0.3),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      elevation: 0,
+                    ),
                   ),
                 ),
               ),
-
               const SizedBox(height: 16),
-
-              // --- Continue Without Account ---
               FadeInUp(
                 duration: const Duration(milliseconds: 1200),
                 delay: const Duration(milliseconds: 600),
                 child: TextButton(
                   onPressed: _continueWithoutAccount,
-                  child: const Text(
+                  child: Text(
                     'Continue without an account',
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: AppColors.primary,
@@ -191,30 +196,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ),
               ),
-
               if (!_isMetaMaskInstalled) ...[
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
-                  onPressed: _installMetaMask,
+                  onPressed: _showMetaMaskInstallGuide,
                   icon: const Icon(Icons.download),
                   label: const Text('Install MetaMask'),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                     side: const BorderSide(
                       color: Color(0xFFF6851B),
                       width: 2,
                     ),
                     foregroundColor: const Color(0xFFF6851B),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ],
-
               const SizedBox(height: 24),
-
               Text(
                 'By connecting, you agree to our Terms of Service\nand Privacy Policy',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   fontSize: 12,
                   color: AppColors.textSecondary.withOpacity(0.7),
                 ),
@@ -232,7 +237,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       duration: const Duration(milliseconds: 1000),
       child: Row(
         children: [
-          // 🔹 Clean icon — no background or shadow
           Icon(icon, size: 26, color: AppColors.primary),
           const SizedBox(width: 16),
           Expanded(
@@ -241,7 +245,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textPrimary,
@@ -250,7 +254,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: const TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 13,
                     color: AppColors.textSecondary,
                   ),
@@ -269,30 +273,45 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _errorMessage = null;
     });
 
-    Future.microtask(() async {
-      try {
-        final success =
-            await ref.read(currentUserProvider.notifier).connectWallet();
+    try {
+      final success =
+          await ref.read(currentUserProvider.notifier).connectWallet();
 
-        if (!mounted) return;
+      if (!mounted) return;
 
-        if (success) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const HomeScreen()),
-          );
-        } else {
-          setState(() {
-            _errorMessage = 'Failed to connect wallet. Please try again.';
-          });
-        }
-      } catch (e) {
+      if (success) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => KYCScreen(userId: 'current_user_id'),
+          ),
+        );
+      } else {
         setState(() {
-          _errorMessage = 'Connection error: $e';
+          _errorMessage =
+              'Failed to connect wallet. Please check that MetaMask is installed and try again.';
         });
-      } finally {
-        if (mounted) setState(() => _isLoading = false);
       }
-    });
+    } on Exception catch (e) {
+      setState(() {
+        _errorMessage = _parseErrorMessage(e.toString());
+      });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  String _parseErrorMessage(String error) {
+    if (error.contains('MetaMask is not installed')) {
+      return 'MetaMask is not installed. Please install it to continue.';
+    } else if (error.contains('timeout')) {
+      return 'Connection timeout. Please try again.';
+    } else if (error.contains('User rejected')) {
+      return 'You rejected the connection. Please try again.';
+    } else if (error.contains('Session confirmation timeout')) {
+      return 'Session confirmation timed out. Please try again.';
+    } else {
+      return 'Connection error: Please try again or check your internet connection.';
+    }
   }
 
   void _continueWithoutAccount() {
@@ -301,20 +320,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  void _installMetaMask() {
+  void _showMetaMaskInstallGuide() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Install MetaMask'),
         content: const Text(
-            'MetaMask is not installed. Would you like to install it from the app store?'),
+          'MetaMask is not installed. Download it from the App Store (iOS) or Google Play (Android) to get started.',
+        ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Install'),
+            child: const Text('Got it'),
           ),
         ],
       ),

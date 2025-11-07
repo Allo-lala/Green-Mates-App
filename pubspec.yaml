@@ -27,10 +27,17 @@ dependencies:
   image_picker: ^1.0.4
   walletconnect_flutter_v2: ^2.3.1
   web3modal_flutter: ^3.0.0
-  
   web3auth_flutter: ^6.1.2
-
   flutter_launcher_icons: ^0.14.3
+
+  vibration: ^3.1.4
+  image: ^4.1.0
+  google_fonts: ^6.3.2
+  smooth_page_indicator: ^1.2.1
+  # animate_do: ^3.1.2
+  # get_it: ^7.6.4
+
+
 
 dev_dependencies:
   flutter_test:
@@ -48,4 +55,7 @@ flutter:
   assets:
     - assets/images/metamask_logo.png
     - assets/images/logo.png
+    - assets/images/onboarding.png
+    - assets/images/eco.png
+    - assets/images/lock.png
 

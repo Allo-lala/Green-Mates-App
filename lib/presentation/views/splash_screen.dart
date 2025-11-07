@@ -1,10 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
-import 'login_screen.dart';
+// import 'login_screen.dart';
 import 'home_screen.dart';
+import 'onboarding_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -26,13 +29,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     if (!mounted) return;
 
     final user = ref.read(currentUserProvider);
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) =>
-            user != null ? const HomeScreen() : const LoginScreen(),
-      ),
+    await Future.delayed(
+      Duration.zero,
+      () async {
+        await Future.wait([Future.value(null)]);
+        return null;
+      },
     );
+
+    if (user != null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+      );
+    }
   }
 
   @override
@@ -62,9 +75,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             const SizedBox(height: 12),
             FadeInUp(
               duration: const Duration(milliseconds: 1000),
-              delay: Duration(milliseconds: 200),
+              delay: const Duration(milliseconds: 200),
               child: const Text(
-                'Engage ○ Empower ● Earn',
+                'Engage ○ Empower ○  Earn',
                 style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
             ),
