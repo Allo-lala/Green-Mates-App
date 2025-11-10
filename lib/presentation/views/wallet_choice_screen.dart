@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, use_build_context_synchronously
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously, unnecessary_to_list_in_spreads
 
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/wallet_constants.dart';
 import '../../services/metamask_service.dart';
+import '../../services/rabby_service.dart';
 import 'kyc_screen.dart';
 
 class WalletChoiceScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Choose a wallet to connect with GrinMates',
+                'Choose a wallet to connect with Grin Mates',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 15,
@@ -123,7 +124,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'Fast & Secure Connection',
+                                    ' ',
                                     style: GoogleFonts.inter(
                                       fontSize: 13,
                                       color: AppColors.textSecondary,
@@ -272,17 +273,30 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
           }
           break;
         case WalletType.rabbyWallet:
-          // Rabby Wallet connection logic (similar to MetaMask)
-          setState(() {
-            _errorMessage =
-                '${walletInfo?.displayName} integration coming soon. Currently supporting MetaMask.';
-          });
+          final rabby = RabbyService();
+          await rabby.initialize();
+
+          final address = await rabby.connectWallet(context: context);
+
+          if (!mounted) return;
+
+          if (address != null) {
+            _triggerHaptic();
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const KYCScreen()),
+            );
+          } else {
+            setState(() {
+              _errorMessage =
+                  'Failed to connect ${walletInfo?.displayName}. Please try again.';
+            });
+          }
           break;
         default:
           // For other wallets, show a placeholder message
           setState(() {
             _errorMessage =
-                '${walletInfo?.displayName} integration coming soon. Currently supporting MetaMask.';
+                '${walletInfo?.displayName} integration coming soon. Currently supporting MetaMask and Rabby.';
           });
       }
     } on ConnectionException catch (e) {

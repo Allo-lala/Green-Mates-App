@@ -62,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     duration: const Duration(milliseconds: 900),
                     delay: const Duration(milliseconds: 100),
                     child: Text(
-                      'Engage ○ Empower ○ Earn',
+                      'Engage • Empower • Earn',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         fontSize: 16,

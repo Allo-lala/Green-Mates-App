@@ -77,7 +77,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               duration: const Duration(milliseconds: 1000),
               delay: const Duration(milliseconds: 200),
               child: const Text(
-                'Engage ○ Empower ○  Earn',
+                'Engage • Empower • Earn',
                 style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
             ),
