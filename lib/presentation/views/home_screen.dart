@@ -2,16 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
 import 'profile_screen.dart';
+import '../../widgets/virtual_card.dart';
 
 // Additional screens
 import 'services_screen.dart';
 import 'campaigns_screen.dart';
 import 'wallet_screen.dart';
 import 'events_screen.dart';
-// import 'eco_points_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -92,348 +93,340 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildHome() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: IntrinsicHeight(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Welcome card
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF0077B5),
-                          Color(0xFF005983)
-                        ], // LinkedIn blue tones
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Welcome back!',
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
-                              SizedBox(height: 10),
-                              Text('Let\'s make a difference today',
-                                  style: TextStyle(color: Colors.white70)),
-                            ],
-                          ),
-                        ),
-                        Icon(Icons.eco, size: 56, color: Colors.white),
-                      ],
-                    ),
-                  ),
+    final user = ref.watch(currentUserProvider);
 
-                  const SizedBox(height: 24),
-
-                  // Balance Card
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF0077B5), Color(0xFF005983)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Your Balance',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(child: _balanceItem('CELO', '0.00')),
-                            const SizedBox(width: 20),
-                            Expanded(child: _balanceItem('cUSD', '0.00')),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Green Points Card
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF00C853), Color(0xFF00A94F)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.stars, color: Colors.white, size: 48),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text('Green Points',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
-                              SizedBox(height: 4),
-                              Text('Total: 55',
-                                  style: TextStyle(color: Colors.white70)),
-                            ],
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() => _selectedIndex = 4);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: const Color(0xFF00A94F),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            elevation: 4,
-                          ),
-                          child: const Text('View'),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 28),
-
-                  const Text(
-                    'Quick Actions',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Quick Actions card
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.15),
-                          blurRadius: 10,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _quickAction(Icons.send, 'Send'),
-                        _quickAction(Icons.download, 'Receive'),
-                        _quickAction(Icons.event, 'Tickets'),
-                        _quickAction(Icons.favorite, 'Donate'),
-                      ],
-                    ),
-                  ),
-                ],
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Welcome Header
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome back!',
+                style: GoogleFonts.inter(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
               ),
+              const SizedBox(height: 4),
+              Text(
+                'Engage, Empower & Earn',
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 28),
+
+          // Virtual Card
+          VirtualCard(
+            cardHolder: user?.name ?? 'Grin Mates',
+            walletAddress: user?.walletAddress ??
+                '0x9A34CA12c1521f1e685f5fAB4F7Ffb9637b39fA6', // Updated parameter to walletAddress
+            balance: 1250.50,
+          ),
+          const SizedBox(height: 32),
+
+          // Quick Actions
+          Text(
+            'Quick Actions',
+            style: GoogleFonts.inter(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
             ),
           ),
-        );
-      },
-    );
-  }
+          const SizedBox(height: 16),
+          _buildQuickActionsGrid(),
+          const SizedBox(height: 32),
 
-  Widget _balanceItem(String symbol, String amount) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(amount,
-              style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
-          Text(symbol,
-              style: const TextStyle(fontSize: 15, color: Colors.white70)),
+          // Assets Section
+          Text(
+            'Your Assets',
+            style: GoogleFonts.inter(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildAssetsSection(),
+          const SizedBox(height: 32),
+
+          // Recent Transactions
+          Text(
+            'Recent Transactions',
+            style: GoogleFonts.inter(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildTransactionsSection(),
+          const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  Widget _quickAction(IconData icon, String label) {
-    return Column(
-      children: [
-        InkWell(
-          borderRadius: BorderRadius.circular(24),
-          onTap: () {
-            if (label == 'Send' || label == 'Receive') {
-              _showWalletActionSheet(label);
-            } else if (label == 'Donate') {
-              _showDonateSheet();
-            } else if (label == 'Tickets') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const EventsScreen(),
-                ),
-              );
-            }
-          },
-          child: Container(
-            padding: const EdgeInsets.all(18),
+  Widget _buildQuickActionsGrid() {
+    final actions = [
+      {'icon': Icons.send, 'label': 'Send', 'color': Colors.blue},
+      {'icon': Icons.download, 'label': 'Receive', 'color': Colors.green},
+      {
+        'icon': Icons.local_activity,
+        'label': 'Tickets',
+        'color': Colors.orange
+      }, // Changed from Icons.event_ticket to Icons.local_activity
+      {'icon': Icons.favorite, 'label': 'Donate', 'color': Colors.red},
+    ];
+
+    return GridView.count(
+      crossAxisCount: 4,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 8,
+      children: actions
+          .map((action) => _buildActionButton(
+                icon: action['icon'] as IconData,
+                label: action['label'] as String,
+                color: action['color'] as Color,
+                onTap: () => _handleQuickAction(action['label'] as String),
+              ))
+          .toList(),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 56,
+            height: 56,
             decoration: BoxDecoration(
-              color: const Color(0xFFF5F8FA),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.15),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: color.withOpacity(0.3),
+                width: 1.5,
+              ),
             ),
-            child: Icon(icon, color: AppColors.primary, size: 28),
+            child: Icon(icon, color: color, size: 24),
           ),
-        ),
-        const SizedBox(height: 8),
-        Text(label,
-            style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.black)),
-      ],
-    );
-  }
-
-  void _showWalletActionSheet(String action) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('$action Funds',
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                labelText: action == 'Send'
-                    ? 'Recipient Address'
-                    : 'Your Wallet Address',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textPrimary,
             ),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Amount',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('$action initiated successfully!')),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                minimumSize: const Size.fromHeight(50),
-              ),
-              child: Text(action),
-            ),
-          ],
-        ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
 
-  void _showDonateSheet() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Choose Payment Option',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: const Icon(Icons.star, color: Colors.amber),
-              title: const Text('Use Green Points'),
-              onTap: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Donating with Green Points...')),
-                );
-              },
+  Widget _buildAssetsSection() {
+    final assets = [
+      {
+        'symbol': 'CELO',
+        'amount': '2.45',
+        'value': '\$245.00',
+        'change': '+2.5%'
+      },
+      {
+        'symbol': 'cUSD',
+        'amount': '500.00',
+        'value': '\$500.00',
+        'change': '+0.0%'
+      },
+      {
+        'symbol': 'UNI',
+        'amount': '5.20',
+        'value': '\$62.40',
+        'change': '+1.8%'
+      },
+    ];
+
+    return Column(
+      children: assets
+          .map(
+            (asset) => Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.divider, width: 1),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        asset['symbol'] as String,
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${asset['amount']} tokens',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        asset['value'] as String,
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        asset['change'] as String,
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: Colors.green,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            ListTile(
-              leading: const Icon(Icons.wallet, color: AppColors.primary),
-              title: const Text('Use Wallet'),
-              onTap: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Donating via Wallet...')),
-                );
-              },
+          )
+          .toList(),
+    );
+  }
+
+  Widget _buildTransactionsSection() {
+    final transactions = [
+      {
+        'icon': Icons.arrow_upward,
+        'title': 'Sent CELO',
+        'subtitle': 'Today at 2:30 PM',
+        'amount': '-1.50 CELO',
+        'color': Colors.red
+      },
+      {
+        'icon': Icons.arrow_downward,
+        'title': 'Received cUSD',
+        'subtitle': 'Yesterday',
+        'amount': '+100.00 cUSD',
+        'color': Colors.green
+      },
+      {
+        'icon': Icons.card_giftcard,
+        'title': 'Earned Green Points',
+        'subtitle': '2 days ago',
+        'amount': '+25 GP',
+        'color': AppColors.primary
+      },
+    ];
+
+    return Column(
+      children: transactions
+          .map(
+            (transaction) => Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.divider, width: 1),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: (transaction['color'] as Color).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      transaction['icon'] as IconData,
+                      color: transaction['color'] as Color,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          transaction['title'] as String,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          transaction['subtitle'] as String,
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    transaction['amount'] as String,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          )
+          .toList(),
+    );
+  }
+
+  void _handleQuickAction(String action) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$action initiated')),
     );
   }
 }

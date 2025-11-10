@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use, unnecessary_to_list_in_spreads
 
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
@@ -54,7 +54,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Choose a wallet to connect with Grin Mates',
+                'Choose a wallet to connect with GreenMates',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 15,
@@ -69,7 +69,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
                 final isSelected = _selectedWallet == wallet.type;
 
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.only(bottom: 12),
                   child: FadeInUp(
                     duration: const Duration(milliseconds: 600),
                     delay: Duration(milliseconds: index * 100),
@@ -77,7 +77,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
                       onTap:
                           _isLoading ? null : () => _selectWallet(wallet.type),
                       child: Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: isSelected
                               ? wallet.primaryColor.withOpacity(0.1)
@@ -93,9 +93,9 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
                         child: Row(
                           children: [
                             Container(
-                              width: 56,
-                              height: 56,
-                              padding: const EdgeInsets.all(8),
+                              width: 48,
+                              height: 48,
+                              padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
                                 color: wallet.primaryColor.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
@@ -111,7 +111,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
                                 },
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,17 +119,9 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
                                   Text(
                                     wallet.displayName,
                                     style: GoogleFonts.inter(
-                                      fontSize: 16,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    ' ',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 13,
-                                      color: AppColors.textSecondary,
                                     ),
                                   ),
                                 ],
@@ -137,8 +129,8 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
                             ),
                             if (isSelected)
                               Container(
-                                width: 24,
-                                height: 24,
+                                width: 20,
+                                height: 20,
                                 decoration: BoxDecoration(
                                   color: wallet.primaryColor,
                                   shape: BoxShape.circle,
@@ -146,7 +138,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
                                 child: const Icon(
                                   Icons.check,
                                   color: Colors.white,
-                                  size: 14,
+                                  size: 12,
                                 ),
                               ),
                           ],

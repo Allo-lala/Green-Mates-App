@@ -1,8 +1,13 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import '../core/utils/logger.dart';
 import 'metamask_service.dart';
+
+const String _userSessionKey = 'greenmates_user_session';
+const String _walletAddressKey = 'greenmates_wallet_address';
+const String _walletTypeKey = 'greenmates_wallet_type';
 
 class User {
   final String id;
@@ -16,6 +21,7 @@ class User {
   final int servicesUsed;
   final DateTime createdAt;
   final bool isAuthenticated;
+  final String walletType;
 
   User({
     required this.id,
@@ -29,6 +35,7 @@ class User {
     this.servicesUsed = 0,
     required this.createdAt,
     this.isAuthenticated = false,
+    this.walletType = 'metamask',
   });
 
   User copyWith({
@@ -52,6 +59,7 @@ class User {
       servicesUsed: servicesUsed ?? this.servicesUsed,
       createdAt: createdAt,
       isAuthenticated: true,
+      walletType: walletType,
     );
   }
 
@@ -67,6 +75,8 @@ class User {
       'totalDonated': totalDonated,
       'servicesUsed': servicesUsed,
       'createdAt': createdAt.toIso8601String(),
+      'isAuthenticated': isAuthenticated,
+      'walletType': walletType,
     };
   }
 
@@ -84,7 +94,8 @@ class User {
       createdAt: DateTime.parse(
         json['createdAt'] ?? DateTime.now().toIso8601String(),
       ),
-      isAuthenticated: true,
+      isAuthenticated: json['isAuthenticated'] ?? true,
+      walletType: json['walletType'] ?? 'metamask',
     );
   }
 }
@@ -121,8 +132,9 @@ class AuthService {
     return metaMaskService.isConnected;
   }
 
-  /// Create user after wallet connection
-  Future<User?> createUser(String walletAddress) async {
+  /// Create user after wallet connection with wallet type support
+  Future<User?> createUser(String walletAddress,
+      [String walletType = 'metamask']) async {
     try {
       final userId = 'user_${DateTime.now().millisecondsSinceEpoch}';
       final user = User(
@@ -130,6 +142,7 @@ class AuthService {
         walletAddress: walletAddress,
         createdAt: DateTime.now(),
         isAuthenticated: true,
+        walletType: walletType,
       );
 
       await secureStorage.write(
@@ -138,6 +151,8 @@ class AuthService {
       await prefs.setString('wallet_address', walletAddress);
       await prefs.setBool('is_authenticated', true);
       await prefs.setString('created_at', DateTime.now().toIso8601String());
+
+      await persistUserSession(user);
 
       AppLogger.i('User created: $userId');
       return user;
@@ -150,9 +165,20 @@ class AuthService {
   /// Get current user
   Future<User?> getCurrentUser() async {
     try {
+      final sessionJson = prefs.getString(_userSessionKey);
+      if (sessionJson != null) {
+        try {
+          final userMap = jsonDecode(sessionJson) as Map<String, dynamic>;
+          return User.fromJson(userMap);
+        } catch (_) {
+          // Session corrupted, fall back to individual values
+        }
+      }
+
       final userId = prefs.getString('user_id');
       final walletAddress = prefs.getString('wallet_address');
       final isAuthenticated = prefs.getBool('is_authenticated') ?? false;
+      final walletType = prefs.getString(_walletTypeKey) ?? 'metamask';
 
       if (userId == null || walletAddress == null || !isAuthenticated) {
         return null;
@@ -172,6 +198,7 @@ class AuthService {
           prefs.getString('created_at') ?? DateTime.now().toIso8601String(),
         ),
         isAuthenticated: true,
+        walletType: walletType,
       );
     } catch (e) {
       AppLogger.e('Error getting current user', e);
@@ -194,6 +221,12 @@ class AuthService {
       if (profileImage != null) {
         await prefs.setString('user_profile_image', profileImage);
       }
+
+      final user = await getCurrentUser();
+      if (user != null) {
+        await persistUserSession(user);
+      }
+
       AppLogger.i('Profile updated');
       return true;
     } catch (e) {
@@ -202,10 +235,33 @@ class AuthService {
     }
   }
 
+  /// Persist user session to local storage
+  Future<void> persistUserSession(User user) async {
+    try {
+      final userJson = jsonEncode(user.toJson());
+      await prefs.setString(_userSessionKey, userJson);
+      await prefs.setString(_walletTypeKey, user.walletType);
+    } catch (e) {
+      AppLogger.e('Session persistence failed', e);
+    }
+  }
+
+  /// Clear user session on logout
+  Future<void> clearUserSession() async {
+    try {
+      await prefs.remove(_userSessionKey);
+      await prefs.remove(_walletTypeKey);
+      await secureStorage.delete(key: _walletAddressKey);
+    } catch (e) {
+      AppLogger.e('Session clear failed', e);
+    }
+  }
+
   /// Sign out
   Future<void> signOut() async {
     try {
       await metaMaskService.disconnect();
+      await clearUserSession();
       await prefs.clear();
       await secureStorage.deleteAll();
       AppLogger.i('User signed out');

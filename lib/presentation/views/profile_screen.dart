@@ -176,15 +176,30 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(
-                            user.walletAddress.length > 20
-                                ? '${user.walletAddress.substring(0, 10)}...${user.walletAddress.substring(user.walletAddress.length - 8)}'
-                                : user.walletAddress,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'monospace',
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Welcome to Grin Mates',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                user.walletAddress.length > 24
+                                    ? '${user.walletAddress.substring(0, 12)}...${user.walletAddress.substring(user.walletAddress.length - 10)}'
+                                    : user.walletAddress,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'monospace',
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         IconButton(

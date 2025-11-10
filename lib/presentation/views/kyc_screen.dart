@@ -1,9 +1,9 @@
-// ignore_for_file: deprecated_member_use, unused_local_variable
+// ignore_for_file: deprecated_member_use, unused_local_variable, unused_import, use_super_parameters
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:animate_do/animate_do.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../services/kyc_service.dart';
@@ -11,7 +11,6 @@ import '../../widgets/app_button.dart';
 import 'home_screen.dart';
 
 class KYCScreen extends ConsumerStatefulWidget {
-  // ignore: use_super_parameters
   const KYCScreen({Key? key}) : super(key: key);
 
   @override
@@ -21,6 +20,7 @@ class KYCScreen extends ConsumerStatefulWidget {
 class _KYCScreenState extends ConsumerState<KYCScreen> {
   int _currentStep = 0;
   bool _isLoading = false;
+  final ScrollController _scrollController = ScrollController();
 
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
@@ -61,6 +61,7 @@ class _KYCScreenState extends ConsumerState<KYCScreen> {
     cityController.dispose();
     postalCodeController.dispose();
     countryController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -164,111 +165,115 @@ class _KYCScreenState extends ConsumerState<KYCScreen> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stepper(
-              currentStep: _currentStep,
-              onStepTapped: (step) {
-                if (step < _currentStep) {
-                  setState(() => _currentStep = step);
-                }
-              },
-              steps: [
-                Step(
-                  title: const Text('Personal Info'),
-                  content: _buildPersonalInfoStep(),
-                  isActive: _currentStep >= 0,
-                ),
-                Step(
-                  title: const Text('Address'),
-                  content: _buildAddressStep(),
-                  isActive: _currentStep >= 1,
-                ),
-                Step(
-                  title: const Text('Documents'),
-                  content: _buildDocumentsStep(),
-                  isActive: _currentStep >= 2,
-                ),
-              ],
-            ),
+            // Progress indicator
+            _buildProgressIndicator(),
+            const SizedBox(height: 24),
+
+            // Current step content
+            _buildStepContent(),
             const SizedBox(height: 32),
-            Row(
-              children: [
-                if (_currentStep > 0)
-                  Expanded(
-                    child: AppButton(
-                      label: 'Back',
-                      isOutlined: true,
-                      onPressed: () =>
-                          setState(() => _currentStep = _currentStep - 1),
-                    ),
-                  ),
-                if (_currentStep > 0) const SizedBox(width: 16),
-                Expanded(
-                  child: AppButton(
-                    label: _currentStep == 2 ? 'Submit KYC' : 'Next',
-                    isLoading: _isLoading,
-                    onPressed: () {
-                      if (_currentStep == 2) {
-                        _submitKYC();
-                      } else {
-                        setState(() => _currentStep = _currentStep + 1);
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
+
+            // Navigation buttons
+            _buildNavigationButtons(),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildProgressIndicator() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Step ${_currentStep + 1} of 3',
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: LinearProgressIndicator(
+            value: (_currentStep + 1) / 3,
+            minHeight: 6,
+            backgroundColor: AppColors.divider,
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepContent() {
+    switch (_currentStep) {
+      case 0:
+        return _buildPersonalInfoStep();
+      case 1:
+        return _buildAddressStep();
+      case 2:
+        return _buildDocumentsStep();
+      default:
+        return _buildPersonalInfoStep();
+    }
+  }
+
   Widget _buildPersonalInfoStep() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
-        TextField(
+        Text(
+          'Personal Information',
+          style: GoogleFonts.inter(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Please provide your personal details',
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            color: AppColors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 24),
+        _buildTextField(
           controller: firstNameController,
-          decoration: const InputDecoration(
-            hintText: 'First Name',
-            prefixIcon: Icon(Icons.person),
-          ),
+          label: 'First Name',
+          icon: Icons.person,
         ),
         const SizedBox(height: 16),
-        TextField(
+        _buildTextField(
           controller: lastNameController,
-          decoration: const InputDecoration(
-            hintText: 'Last Name',
-            prefixIcon: Icon(Icons.person),
-          ),
+          label: 'Last Name',
+          icon: Icons.person,
         ),
         const SizedBox(height: 16),
-        TextField(
+        _buildTextField(
           controller: emailController,
-          decoration: const InputDecoration(
-            hintText: 'Email Address',
-            prefixIcon: Icon(Icons.email),
-          ),
+          label: 'Email Address',
+          icon: Icons.email,
         ),
         const SizedBox(height: 16),
-        TextField(
+        _buildTextField(
           controller: dateOfBirthController,
-          decoration: const InputDecoration(
-            hintText: 'Date of Birth (YYYY-MM-DD)',
-            prefixIcon: Icon(Icons.calendar_today),
-          ),
+          label: 'Date of Birth (YYYY-MM-DD)',
+          icon: Icons.calendar_today,
         ),
         const SizedBox(height: 16),
-        TextField(
+        _buildTextField(
           controller: nationalityController,
-          decoration: const InputDecoration(
-            hintText: 'Nationality',
-            prefixIcon: Icon(Icons.public),
-          ),
+          label: 'Nationality',
+          icon: Icons.public,
         ),
       ],
     );
@@ -276,38 +281,47 @@ class _KYCScreenState extends ConsumerState<KYCScreen> {
 
   Widget _buildAddressStep() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
-        TextField(
+        Text(
+          'Address Information',
+          style: GoogleFonts.inter(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Please provide your residential address',
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            color: AppColors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 24),
+        _buildTextField(
           controller: addressController,
-          decoration: const InputDecoration(
-            hintText: 'Street Address',
-            prefixIcon: Icon(Icons.location_on),
-          ),
+          label: 'Street Address',
+          icon: Icons.location_on,
         ),
         const SizedBox(height: 16),
-        TextField(
+        _buildTextField(
           controller: cityController,
-          decoration: const InputDecoration(
-            hintText: 'City',
-            prefixIcon: Icon(Icons.location_city),
-          ),
+          label: 'City',
+          icon: Icons.location_city,
         ),
         const SizedBox(height: 16),
-        TextField(
+        _buildTextField(
           controller: postalCodeController,
-          decoration: const InputDecoration(
-            hintText: 'Postal Code',
-            prefixIcon: Icon(Icons.mail),
-          ),
+          label: 'Postal Code',
+          icon: Icons.mail,
         ),
         const SizedBox(height: 16),
-        TextField(
+        _buildTextField(
           controller: countryController,
-          decoration: const InputDecoration(
-            hintText: 'Country',
-            prefixIcon: Icon(Icons.flag),
-          ),
+          label: 'Country',
+          icon: Icons.flag,
         ),
       ],
     );
@@ -317,15 +331,23 @@ class _KYCScreenState extends ConsumerState<KYCScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
         Text(
-          'Upload Required Documents',
+          'Document Verification',
           style: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 4),
+        Text(
+          'Upload required documents to complete verification',
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            color: AppColors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 24),
         _buildDocumentUploadCard(
           'Identity Document',
           'Passport or National ID',
@@ -347,6 +369,32 @@ class _KYCScreenState extends ConsumerState<KYCScreen> {
           () => _pickImage('selfie'),
         ),
       ],
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+  }) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: AppColors.primary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.divider),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.divider),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        ),
+      ),
     );
   }
 
@@ -404,6 +452,84 @@ class _KYCScreenState extends ConsumerState<KYCScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildNavigationButtons() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            if (_currentStep > 0)
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => setState(() => _currentStep--),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: const BorderSide(color: AppColors.divider),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Back',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+              ),
+            if (_currentStep > 0) const SizedBox(width: 16),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: _isLoading
+                    ? null
+                    : () {
+                        if (_currentStep == 2) {
+                          _submitKYC();
+                        } else {
+                          setState(() => _currentStep++);
+                          // Scroll to top when moving to next step
+                          _scrollController.animateTo(
+                            0,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : Text(
+                        _currentStep == 2 ? 'Submit KYC' : 'Next',
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
