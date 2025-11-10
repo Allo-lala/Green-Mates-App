@@ -95,9 +95,9 @@ class _RainbowConnectDialogState extends State<_RainbowConnectDialog> {
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [
-                    Color(0xFFFF1D5E),
-                    Color(0xFFFA5723),
-                    Color(0xFFFFC107)
+                    // Color(0xFFFF1D5E),
+                    Color.fromARGB(255, 10, 0, 151),
+                    // Color(0xFFFFC107)
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -119,7 +119,7 @@ class _RainbowConnectDialogState extends State<_RainbowConnectDialog> {
             ),
             const SizedBox(height: 12),
             const Text(
-              'Approve connection to GreenMates',
+              'Approve connection to Grin Mates',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,

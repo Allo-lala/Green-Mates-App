@@ -66,7 +66,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Connect your Celo wallet to access services, donate to campaigns, and earn eco-points',
+                'Connect your wallet to access services, donate to campaigns, and earn eco-points',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 14,

@@ -215,7 +215,7 @@ class WalletServiceFactory {
       case WalletType.trustWallet:
         return TrustWalletService(projectId);
       case WalletType.rainbowWallet:
-        return MetaMaskWalletService(projectId); // Rainbow uses WalletConnect
+        return MetaMaskWalletService(projectId);
       case WalletType.phantomWallet:
         return MetaMaskWalletService(
             projectId); // Phantom uses similar protocol

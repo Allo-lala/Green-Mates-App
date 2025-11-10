@@ -54,7 +54,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Choose a wallet to connect with GreenMates',
+                'Choose a wallet to connect with Grin Mates',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 15,
