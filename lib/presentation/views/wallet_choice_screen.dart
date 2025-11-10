@@ -1,13 +1,15 @@
-// ignore_for_file: deprecated_member_use, use_build_context_synchronously, unnecessary_to_list_in_spreads
+// ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:vibration/vibration.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/wallet_constants.dart';
 import '../../services/metamask_service.dart';
 import '../../services/rabby_service.dart';
+import '../../services/rainbow_simulator_service.dart';
 import 'kyc_screen.dart';
 
 class WalletChoiceScreen extends StatefulWidget {
@@ -52,7 +54,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Choose a wallet to connect with Grin Mates',
+                'Choose a wallet to connect with GreenMates',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 15,
@@ -272,6 +274,31 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
             });
           }
           break;
+        case WalletType.rainbowWallet:
+          if (Platform.isAndroid) {
+            // Use simulator for Android testing
+            final rainbow = RainbowSimulatorService();
+            final address = await rainbow.connectWallet(context: context);
+
+            if (!mounted) return;
+
+            if (address != null) {
+              _triggerHaptic();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const KYCScreen()),
+              );
+            } else {
+              setState(() {
+                _errorMessage =
+                    'Failed to connect Rainbow Wallet. Please try again.';
+              });
+            }
+          } else {
+            setState(() {
+              _errorMessage = 'Rainbow Wallet connection available on Android.';
+            });
+          }
+          break;
         case WalletType.rabbyWallet:
           final rabby = RabbyService();
           await rabby.initialize();
@@ -296,7 +323,7 @@ class _WalletChoiceScreenState extends State<WalletChoiceScreen> {
           // For other wallets, show a placeholder message
           setState(() {
             _errorMessage =
-                '${walletInfo?.displayName} integration coming soon. Currently supporting MetaMask and Rabby.';
+                '${walletInfo?.displayName} integration coming soon. Currently supporting MetaMask, Rabby, and Rainbow.';
           });
       }
     } on ConnectionException catch (e) {
