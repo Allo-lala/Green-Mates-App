@@ -11,7 +11,10 @@ import '../services/metamask_service.dart';
 final authServiceProvider = FutureProvider<AuthService>((ref) async {
   final prefs = await SharedPreferences.getInstance();
   const secureStorage = FlutterSecureStorage();
+
   final metaMaskService = MetaMaskService();
+  await metaMaskService.initialize(); // initialize before using
+
   return AuthService(
     prefs: prefs,
     secureStorage: secureStorage,

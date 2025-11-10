@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="go_green_mates"
+        android:label="Grin Mates"
         android:name="${applicationName}"
         android:icon="@mipmap/new_icon">
         <activity

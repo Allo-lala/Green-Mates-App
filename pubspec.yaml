@@ -37,6 +37,7 @@ dependencies:
   # animate_do: ^3.1.2
   # get_it: ^7.6.4
   postgres: ^3.0.0
+  reown_appkit: ^1.0.1
 
 
 

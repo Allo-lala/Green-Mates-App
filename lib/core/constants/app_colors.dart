@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 class AppColors {
   static const Color primary = Color(0xFF05A854); // Vibrant eco-green
   static const Color primaryDark = Color(0xFF048A46);
-  static const Color primaryLight = Color(0xFF0FCF97); // Light accent green
+  static const Color primaryLight = Color.fromARGB(
+    255,
+    255,
+    255,
+    255,
+  ); // Light accent green
   static const Color accent = Color.fromARGB(255, 55, 89, 241);
   static const Color background = Color(0xFFF8F9FA);
   static const Color cardBackground = Colors.white;

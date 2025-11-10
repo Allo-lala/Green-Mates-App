@@ -920,6 +920,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.3"
+  reown_appkit:
+    dependency: "direct main"
+    description:
+      name: reown_appkit
+      sha256: "16d5ce70bd254db2b0fd837272438f240212caf0fadff17902834cfb6644dc26"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  reown_core:
+    dependency: transitive
+    description:
+      name: reown_core
+      sha256: acfdd52de8a1c9c2c96007a9911cfe7750254233493b391ac90bcf629bf1f7c6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  reown_sign:
+    dependency: transitive
+    description:
+      name: reown_sign
+      sha256: ee2a555c815ba300699615b499d2d67060fdf4e7ba6469e21c4501e6cd47bd02
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   riverpod:
     dependency: transitive
     description:
