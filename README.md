@@ -1,46 +1,62 @@
-## Grin mates
-Grin Mates is a digital platform that empowers and engages individuals and organizations to take real action toward a sustainable planet while they earn. 
-Built with Flutter, it bridges global users through eco-friendly campaigns, challenges, and reward systems that turn environmental impact into measurable value.
+# Grin-Mates
 
-Through verified partnerships and AI-driven insights, Go Green Mates enables:
+The first Eco-friendly dApp
 
-Cross-border collaboration on environmental projects
+A modern Celo blockchain application built with Next.js, TypeScript, and Turborepo.
 
-Incentivized green behavior via eco-points and rewards
+## Getting Started
 
-Real-time engagement in climate campaigns and community drives
+1. Install dependencies:
+   ```bash
+   pnpm install
+   ```
 
-Data-backed impact reporting for sponsors and funders
+2. Start the development server:
+   ```bash
+   pnpm dev
+   ```
 
-Our mission is to make sustainability engaging, inclusive, and data-driven — inspiring the next generation of environmental changemakers.
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## These are some of the screen Shots of Grin Mates
+## Project Structure
 
+This is a monorepo managed by Turborepo with the following structure:
 
-### Splash Screen
-![Splash Screen](assets/screenshots/splash1.png)
+- `apps/web` - Next.js application with embedded UI components and utilities
+- `apps/hardhat` - Smart contract development environment
 
-### Login Screen
-![Login Screen](assets/screenshots/splash2.png)
+## Available Scripts
 
-## Home Screen 
-![Home Screen](assets/screenshots/splash3.png)
+- `pnpm dev` - Start development servers
+- `pnpm build` - Build all packages and apps
+- `pnpm lint` - Lint all packages and apps
+- `pnpm type-check` - Run TypeScript type checking
 
-## Receive Screen
-![Receive Screen](assets/screenshots/splash4.png)
+### Smart Contract Scripts
 
-## Donate Screen
-![Donate Screen](assets/screenshots/splash5.png)
+- `pnpm contracts:compile` - Compile smart contracts
+- `pnpm contracts:test` - Run smart contract tests
+- `pnpm contracts:deploy` - Deploy contracts to local network
+- `pnpm contracts:deploy:alfajores` - Deploy to Celo Alfajores testnet
+- `pnpm contracts:deploy:sepolia` - Deploy to Celo Sepolia testnet
+- `pnpm contracts:deploy:celo` - Deploy to Celo mainnet
 
-###  Events Screen
-![Events Screen](assets/screenshots/splash6.png)
+## Tech Stack
 
-###  Events preview Screen
-![Events preview Screen](assets/screenshots/splash9.png)
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Smart Contracts**: Hardhat with Viem
+- **Monorepo**: Turborepo
+- **Package Manager**: PNPM
 
-###  Tickets Screen
-![Tickets Screen](assets/screenshots/splash7.png)
+## Learn More
 
-###  Ticket preview Screen
-![Tickets Screen](assets/screenshots/splash8.png)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Celo Documentation](https://docs.celo.org/)
+- [Turborepo Documentation](https://turbo.build/repo/docs)
+- [shadcn/ui Documentation](https://ui.shadcn.com/)
 
+` cd ~/Downloads/Grin-Mates/apps/web`
+` cd ~/Downloads/Grin\ Mates/apps/web `

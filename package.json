@@ -1,0 +1,42 @@
+{
+  "name": "grin-mates",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@celo/contractkit": "^1.5.2",
+    "@celo/identity": "^1.5.2",
+    "@hookform/resolvers": "^3.10.0",
+    "@radix-ui/react-dialog": "1.1.4",
+    "@radix-ui/react-tabs": "1.1.2",
+    "@radix-ui/react-toast": "1.2.4",
+    "lucide-react": "^0.454.0",
+    "next": "16.0.0",
+    "next-themes": "^0.4.6",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-hook-form": "^7.60.0",
+    "wagmi": "^2.5.0",
+    "web3": "^1.10.0",
+    "zod": "3.25.76",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "tailwind-merge": "3.4.0",
+    "tailwindcss-animate": "1.0.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.9",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "postcss": "^8.5",
+    "tailwindcss": "^4.1.9",
+    "typescript": "^5"
+  }
+}
