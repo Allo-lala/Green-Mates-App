@@ -1,79 +1,69 @@
 'use client';
 
-import { useState } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
-import WalletCard from '@/components/wallet-card';
-import { WALLET_CONFIGS, WALLET_TYPES } from '@/lib/constants';
-import { connectWallet } from '@/lib/wallet';
-import { saveUserSession } from '@/lib/auth';
+import { useEffect } from 'react';
+import { Wallet, Loader2 } from 'lucide-react';
 
 export default function WalletConnectionScreen() {
+  const { login, authenticated, user, ready } = usePrivy();
   const router = useRouter();
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleWalletSelect = async (walletType: string) => {
-    setSelectedWallet(walletType);
-    setError(null);
-    setIsConnecting(true);
+  useEffect(() => {
+    if (authenticated && user) {
+      router.push('/kyc');
+    }
+  }, [authenticated, user, router]);
 
+  const handleConnect = async () => {
     try {
-      const address = await connectWallet(walletType);
-      if (address) {
-        await saveUserSession(address, walletType);
-        router.push('/kyc');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Connection failed');
-      setSelectedWallet(null);
-    } finally {
-      setIsConnecting(false);
+      await login();
+    } catch (error) {
+      console.error('[ Privy login error:', error);
     }
   };
 
+  if (!ready) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#1db584]" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#1db584]/10 to-[#15a576]/10 px-4 py-8">
       <div className="mx-auto max-w-2xl">
-        {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-3">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#1db584]">
+            <Wallet className="h-10 w-10 text-white" />
+          </div>
+          <h1 className="mb-3 text-4xl font-bold text-gray-900">
             Connect Your Wallet
           </h1>
-          <p className="text-lg text-muted-foreground">
-            Choose your preferred crypto wallet to get started with GreenMates
+          <p className="text-lg text-gray-600">
+            Choose your preferred crypto wallet to get started with Grin Mates
           </p>
         </div>
 
-        {/* Error message */}
-        {error && (
-          <div className="mb-6 rounded-lg border border-red-300 bg-red-50 p-4 text-red-700">
-            {error}
+        <div className="rounded-2xl bg-white p-8 shadow-xl">
+          <button
+            onClick={handleConnect}
+            className="w-full rounded-xl bg-[#1db584] px-6 py-4 text-lg font-semibold text-white transition-all hover:bg-[#1db584]/90 hover:shadow-lg"
+          >
+            Connect Wallet
+          </button>
+
+          <div className="mt-6 rounded-lg p-4">
+            <p className="text-center text-sm text-gray-600">
+              Engage • Empower • Earn
+            </p>
           </div>
-        )}
-
-        {/* Wallet grid */}
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {Object.entries(WALLET_CONFIGS).map(([key, config]) => (
-            <WalletCard
-              key={key}
-              walletType={key}
-              config={config}
-              isSelected={selectedWallet === key}
-              isLoading={isConnecting && selectedWallet === key}
-              onSelect={() => handleWalletSelect(key)}
-              disabled={isConnecting && selectedWallet !== key}
-            />
-          ))}
         </div>
 
-        {/* Info text */}
-        <div className="mt-12 rounded-lg border border-primary/20 bg-primary/5 p-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            We support MetaMask, Rabby, Rainbow, Trust Wallet, Phantom, and Coinbase Wallet. More wallets coming soon.
-          </p>
-        </div>
+        <p className="mt-8 text-center text-sm text-gray-500">
+          By connecting, you agree to our Terms of Service and Privacy Policy
+        </p>
       </div>
     </div>
   );

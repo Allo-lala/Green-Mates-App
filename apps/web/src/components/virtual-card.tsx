@@ -4,10 +4,12 @@ import { Eye, EyeOff, Copy } from 'lucide-react';
 import { useState } from 'react';
 
 interface VirtualCardProps {
-  balance: string;
+  balance: number;
   hideBalance: boolean;
   onToggleBalance: () => void;
   walletAddress: string;
+  onSend?: () => void;
+  onReceive?: () => void;
 }
 
 export default function VirtualCard({
@@ -35,10 +37,10 @@ export default function VirtualCard({
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm font-semibold text-white/80 uppercase tracking-widest">
+            {/* <p className="text-sm font-semibold text-white/80 uppercase tracking-widest">
               GreenMates Wallet
             </p>
-            <h2 className="text-2xl font-bold text-white mt-1">Engage. Empower. Earn.</h2>
+            <h2 className="text-2xl font-bold text-white mt-1">Engage. Empower. Earn.</h2> */}
           </div>
           <button
             onClick={onToggleBalance}
@@ -78,12 +80,12 @@ export default function VirtualCard({
         </div>
 
         {/* Card Number */}
-        <div className="border-t border-white/20 pt-6">
+        {/* <div className="border-t border-white/20 pt-6">
           <p className="text-xs text-white/70 uppercase tracking-wider">Card Number</p>
           <p className="text-lg font-mono text-white/90 mt-2 tracking-widest">
             {hideBalance ? '•••• •••• •••• ••••' : '1234 5678 9012 3456'}
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

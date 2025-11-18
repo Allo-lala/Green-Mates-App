@@ -1,4 +1,6 @@
 {
+  "/wallet-connect/page": "app/wallet-connect/page.js",
   "/page": "app/page.js",
+  "/kyc/page": "app/kyc/page.js",
   "/dashboard/page": "app/dashboard/page.js"
 }

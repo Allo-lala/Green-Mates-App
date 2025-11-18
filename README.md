@@ -58,5 +58,4 @@ This is a monorepo managed by Turborepo with the following structure:
 - [Turborepo Documentation](https://turbo.build/repo/docs)
 - [shadcn/ui Documentation](https://ui.shadcn.com/)
 
-` cd ~/Downloads/Grin-Mates/apps/web`
 ` cd ~/Downloads/Grin\ Mates/apps/web `
