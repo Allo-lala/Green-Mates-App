@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ChevronRight, Upload } from 'lucide-react';
 import KYCStep from '@/components/kyc-step';
 
-type KYCStep = 'personal' | 'address' | 'documents';
+type KYCStepType = 'personal' | 'address' | 'documents';
 
 interface KYCData {
   firstName: string;
@@ -37,12 +37,12 @@ const initialData: KYCData = {
 
 export default function KYCScreenComponent() {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState<KYCStep>('personal');
+  const [currentStep, setCurrentStep] = useState<KYCStepType>('personal');
   const [kycData, setKYCData] = useState<KYCData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const steps: KYCStep[] = ['personal', 'address', 'documents'];
+  const steps: KYCStepType[] = ['personal', 'address', 'documents'];
   const currentStepIndex = steps.indexOf(currentStep);
 
   const handleInputChange = (field: keyof KYCData, value: string | File | null) => {
@@ -94,6 +94,9 @@ export default function KYCScreenComponent() {
     try {
       // Here you would send the KYC data to your backend
       await new Promise(resolve => setTimeout(resolve, 2000));
+      // Save KYC Data
+      localStorage.setItem("kycName", `${kycData.firstName} ${kycData.lastName}`);
+      localStorage.setItem("kycCompleted", "true");
       router.push('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Submission failed');
@@ -111,7 +114,7 @@ export default function KYCScreenComponent() {
             Verify Your Identity
           </h1>
           <p className="text-muted-foreground">
-            Complete KYC to unlock all GreenMates features
+            Complete KYC to unlock all Grin Mates features
           </p>
         </div>
 
